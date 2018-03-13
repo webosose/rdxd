@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# Copyright (c) 2014-2018 LG Electronics, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+
+# this will execute every script from @WEBOS_INSTALL_DATADIR@/rdxd/filters
+# through pipe in alphabetical order. Initial messages file is about to be
+# given to the first script through stdin. And messages file with all
+# transformations applied is about to be read through stdout from the last script
+# and rewritten to initial messages file by path accepted as $1
+
+if [ $# -ne 1 ]; then
+    source @WEBOS_INSTALL_DATADIR@/rdxd/logging.sh
+    ErrPrint PARAM_ERROR SCRIPT=\"filter.sh\" "Invalid number of parameters ($#)."
+    exit 1
+fi
+
+result_file="$1.safe.log"
+
+COMMAND="cat $1"
+for file in @WEBOS_INSTALL_DATADIR@/rdxd/filters.d/*
+do
+    if [[ -x $file ]]; then
+        COMMAND="$COMMAND | $file"
+    fi
+done
+
+eval $COMMAND > $result_file
+echo -n $result_file
+
+exit 0

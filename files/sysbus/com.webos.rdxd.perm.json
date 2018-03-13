@@ -1,0 +1,3 @@
+{
+    "com.webos.rdxd":["system.debug","settings.read","telephony"]
+}

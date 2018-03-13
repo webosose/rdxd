@@ -1,0 +1,15 @@
+style=ansi
+indent=tab=4
+indent-switches
+indent-namespaces
+indent-col1-comments
+pad-oper
+pad-header
+unpad-paren
+align-pointer=name
+align-reference=name
+convert-tabs
+close-templates
+break-after-logical
+max-code-length=120
+lineend=linux

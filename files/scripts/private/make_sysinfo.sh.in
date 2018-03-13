@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# Copyright (c) 2008-2018 LG Electronics, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+
+source @WEBOS_INSTALL_DATADIR@/rdxd/logging.sh
+
+LaunchWithTimeout() {
+	$1 &
+	DFPID=$!
+	count=0
+	while kill -0 $DFPID 2>/dev/null && [ $count -lt $2 ]
+	do
+		sleep 1
+		count=`expr $count + 1`
+	done
+	kill -9 $DFPID 2> /dev/null
+}
+
+if [ $# -ne 1 ]; then
+        ErrPrint PARAM_ERROR SCRIPT=\"make_sysinfo.sh\" "Invalid number of parameters ($#)."
+        exit 1
+fi
+
+rdx_sysinfo_file="$1"
+
+echo "# Remote Diagnostics - Report" > $rdx_sysinfo_file
+
+# cat's out the given set of files
+for f in "/proc/cpuinfo" "/sys/class/mmc_host/mmc0/mmc0:0001/manfid" "/sys/class/mmc_host/mmc0/mmc0:0001/oemid" "/sys/class/mmc_host/mmc0/mmc0:0001/serial" "/proc/mounts" "/etc/version"; do
+	echo "$ cat $f" >> $rdx_sysinfo_file
+	cat "$f" >> $rdx_sysinfo_file
+
+done
+
+# executes the given set of commands
+for c in "uptime" "df -h" "ps aux" "date -R" "ls -l @WEBOS_INSTALL_SYSMGR_LOCALSTATEDIR@/preferences" "ifconfig"; do
+	echo "$ $c" >> $rdx_sysinfo_file
+	$c >> $rdx_sysinfo_file
+done
+
+echo "$ luna-send -n 1 -f luna://com.webos.service.connectionmanager/getStatus '{}'" >> $rdx_sysinfo_file
+luna-send -n 1 -w 250 -f luna://com.webos.service.connectionmanager/getStatus '{}' >> $rdx_sysinfo_file
+echo "$ luna-send -n 1 -f luna://com.webos.applicationManager/running '{}'" >> $rdx_sysinfo_file
+luna-send -n 1 -w 250 -f luna://com.webos.applicationManager/running '{}' >> $rdx_sysinfo_file

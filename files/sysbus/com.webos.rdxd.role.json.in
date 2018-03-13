@@ -1,0 +1,11 @@
+{
+    "exeName":"@WEBOS_INSTALL_SBINDIR@/rdxd",
+    "allowedNames":["com.webos.rdxd"],
+    "type":"regular",
+    "permissions":[
+        {
+            "service":"com.webos.rdxd",
+            "outbound":["com.webos.settingsservice","com.webos.pmlogd","com.palm.telephony","com.palm.uploadd","com.webos.service.crashreport","com.webos.service.cloudupload","com.webos.service.rdxdclient.*"]
+        }
+    ]
+}

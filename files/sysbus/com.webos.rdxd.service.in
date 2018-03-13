@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=com.webos.rdxd
+Exec=@WEBOS_INSTALL_SBINDIR@/rdxd
+Type=static

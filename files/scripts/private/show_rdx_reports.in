@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Copyright (c) 2008-2018 LG Electronics, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+
+find @WEBOS_INSTALL_LOGDIR@/rdxd -type f -name "*.tgz" | sort | while read f; do
+  id=`echo $f | sed 's/.*rdxd_log_//;s/.tgz//'`
+  tar zxOvf $f "overview.txt" 2>/dev/null > /tmp/overview.txt
+  comp=`grep REPORT_COMPONENT /tmp/overview.txt | sed 's/^.*=//'`
+  cause=`grep REPORT_CAUSE /tmp/overview.txt | sed 's/^.*=//'`
+  detail=`grep REPORT_DETAIL /tmp/overview.txt | sed 's/^.*=//'`
+  DbgPrint "$id $COMP $CAUSE $DETAIL $f"
+
+done
