@@ -1,4 +1,4 @@
-// Copyright (c) 2008-2018 LG Electronics, Inc.
+// Copyright (c) 2008-2019 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -866,11 +866,17 @@ static bool make_report_LS(LSHandle *lshandle, LSMessage *message, void *wd)
 		g_set_error(&error, RDX_ERROR, RDX_ERR_SERVICE, "Error parsing schema: %s", error_msg);
 		jerror_free(jerr);
 		result = RDX_ERR_SERVICE;
+		if( NULL != payload_schema)
+		{
+			jschema_release(&payload_schema);
+			payload_schema = NULL;
+		}
 		goto respond;
 	}
 
 	parsedObj = jdom_create(j_cstr_to_buffer(LSMessageGetPayload(message)), payload_schema, &jerr);
 	jschema_release(&payload_schema);
+	payload_schema = NULL;
 	if (jerr)
 	{
 		char error_msg[256] = {0};
