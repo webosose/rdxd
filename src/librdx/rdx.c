@@ -1,4 +1,4 @@
-// Copyright (c) 2008-2018 LG Electronics, Inc.
+// Copyright (c) 2008-2019 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -259,7 +259,10 @@ delete_file_if_seen(gpointer data, gpointer user_data)
 	{
 		gchar *path = g_build_filename(RDX_FOLDER_PATH, file, NULL);
 		LOG_LIBRDX_DEBUG("%s: removing %s", __func__, path);
-		g_remove(path);
+		if (g_remove(path) !=0)
+		{
+			LOG_LIBRDX_DEBUG("%s: g_remove failed for %s", __func__, path);
+		}
 		g_free(path);
 		(*num_removed)++;
 	}
@@ -622,7 +625,10 @@ rdx_make_report_from_file(RdxReportMetadata md, const char *path)
 			LOG_LIBRDX_ERROR(MSGID_RDX_REPORT_ERR, 1, PMLOGKS(IMPACT,
 			                 "Cannot create rdx report from file"),
 			                 "failed to create a rdx report");
-			g_remove(dest_path);
+			if (g_remove(dest_path) != 0)
+			{
+				LOG_LIBRDX_DEBUG("%s: g_remove failed for %s", __func__, dest_path);
+			}
 		}
 	}
 
@@ -734,7 +740,9 @@ rdx_make_report(RdxReportMetadata md, const char *contents)
 			LOG_LIBRDX_ERROR(MSGID_CONTENTS_WRITE_ERR, 2, PMLOGKFV(ERRCODE, "%d", errno),
 			                 PMLOGKS(ERRTEXT, strerror(errno)), "Payload contents write failed");
 			close(fd);
-			g_remove(temp_path);
+			if (g_remove(temp_path) != 0) {
+				LOG_LIBRDX_DEBUG("%s: g_remove failed for %s", __func__, temp_path);
+			}
 			goto end;
 		}
 	}
@@ -759,7 +767,10 @@ rdx_make_report(RdxReportMetadata md, const char *contents)
 	{
 		LOG_LIBRDX_ERROR(MSGID_CREATE_RDX_FOLDER_ERR, 3, PMLOGKS(PATH, RDX_FOLDER_PATH),
 		                 PMLOGKFV(ERRCODE, "%d", errno), PMLOGKS(ERRTEXT, strerror(errno)), "");
-		g_remove(temp_path);
+		if (g_remove(temp_path) != 0)
+		{
+			LOG_LIBRDX_DEBUG("%s: g_remove failed for %s", __func__, temp_path);
+		}
 		goto end;
 	}
 
@@ -767,7 +778,10 @@ rdx_make_report(RdxReportMetadata md, const char *contents)
 	{
 		LOG_LIBRDX_ERROR(MSGID_PATH_RENAME_ERR, 2, PMLOGKFV(ERRCODE, "%d", errno),
 		                 PMLOGKS(ERRTEXT, strerror(errno)), "");
-		g_remove(temp_path);
+		if (g_remove(temp_path) != 0)
+		{
+			LOG_LIBRDX_DEBUG("%s: g_remove failed for %s", __func__, temp_path);
+		}
 	}
 	else
 	{
@@ -778,6 +792,7 @@ end:
 	g_free(temp_path);
 	g_free(template_file_name);
 	g_free(dest_path);
+	g_free(template_file_name_ex);
 
 	return ret;
 }
