@@ -504,7 +504,7 @@ handle_new_crash(GIOChannel *source, GIOCondition condition, gpointer data)
 
 			status = g_io_channel_read_chars(source, name, event.len, &size, &err);
 
-			if (status == G_IO_STATUS_ERROR)
+			if (status == G_IO_STATUS_ERROR && NULL != err)
 			{
 				LOG_RDXD_WARNING(MSGID_INOTIFY_NAME_READ_ERR, 1, PMLOGKS(ERRTEXT, err->message),
 				                 "error reading inotify name");
