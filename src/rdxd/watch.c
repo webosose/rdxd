@@ -114,8 +114,10 @@ new_report_spec(const char *path)
                 return spec;
         }
 
+	int fd = fileno(fp);
+
         // read meta data.
-	if (stat(path, &file_stat))
+	if (fstat(fd, &file_stat))
 	{
 		LOG_RDXD_WARNING(MSGID_STAT_ERR, 2,
 		                 PMLOGKS(PATH, path), PMLOGKFV(ERRCODE, "%d", errno), ""); // 'n' not used
@@ -171,7 +173,7 @@ new_report_spec(const char *path)
 
 	metadata_str[n] = 0;
 
-	n = truncate(path, file_stat.st_size - len - sizeof(size_t));
+	n = ftruncate(fp, file_stat.st_size - len - sizeof(size_t));
 
 	if (n)
 	{
