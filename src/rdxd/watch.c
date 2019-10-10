@@ -105,7 +105,7 @@ new_report_spec(const char *path)
 
 	ReportSpec_t *spec = g_new0(ReportSpec_t , 1);
 
-	fp = fopen(path, "r");
+	fp = fopen(path, "r+");
 
         if (!fp)
         {
@@ -117,7 +117,7 @@ new_report_spec(const char *path)
 	int fd = fileno(fp);
 
         // read meta data.
-	if (fstat(fd, &file_stat))
+	if (fstat(fd, &file_stat) == -1)
 	{
 		LOG_RDXD_WARNING(MSGID_STAT_ERR, 2,
 		                 PMLOGKS(PATH, path), PMLOGKFV(ERRCODE, "%d", errno), ""); // 'n' not used
@@ -173,9 +173,9 @@ new_report_spec(const char *path)
 
 	metadata_str[n] = 0;
 
-	n = ftruncate(fp, file_stat.st_size - len - sizeof(size_t));
+	n = ftruncate(fd, file_stat.st_size - len - sizeof(size_t));
 
-	if (n)
+	if (n < 0)
 	{
 		LOG_RDXD_WARNING(MSGID_FILE_TRUNCATE_ERR, 0,
 		                 "failed to truncate file from size=%zd to size=%zd\n",
