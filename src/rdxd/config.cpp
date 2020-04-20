@@ -1,4 +1,4 @@
-// Copyright (c) 2008-2018 LG Electronics, Inc.
+// Copyright (c) 2008-2020 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -98,7 +98,7 @@ ReadProps(GKeyFile *config_file, bool *autoUpload)
 		               PMLOGKFV(ERRCODE, "%d", lerr), "Couldn't open system properties");
 		return false;
 	}
-
+        char* tempName = "AutoUpload";
 	typedef enum { teBool = 1, teInt } typeEnum;
 
 	struct
@@ -110,7 +110,7 @@ ReadProps(GKeyFile *config_file, bool *autoUpload)
 		void *dest;
 	} css[] =
 	{
-		{teBool, "AutoUpload", kSectionKey_RDXD, true, autoUpload},
+		{teBool, tempName, kSectionKey_RDXD, true, autoUpload},
 		{teBool, NULL, NULL, false, NULL}
 	};
 

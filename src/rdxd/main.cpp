@@ -1,4 +1,4 @@
-// Copyright (c) 2008-2019 LG Electronics, Inc.
+// Copyright (c) 2008-2020 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -1316,7 +1316,7 @@ static bool log_rotation_handler_LS(LSHandle *lshandle, LSMessage *message, void
 			                 PMLOGKS(NEWPATH, oldPath.c_str()),
 			                 PMLOGKS(ERRTEXT, strerror(errno)), "Failed to rename file");
 		}
-		remove(filePath);
+		(void)remove(filePath);
 	}
 END:
 	g_free(filePath);
