@@ -98,14 +98,14 @@ ReadProps(GKeyFile *config_file, bool *autoUpload)
 		               PMLOGKFV(ERRCODE, "%d", lerr), "Couldn't open system properties");
 		return false;
 	}
-        char* tempName = "AutoUpload";
+        const char* tempName = "AutoUpload";
 	typedef enum { teBool = 1, teInt } typeEnum;
 
 	struct
 	{
 		typeEnum type;
-		char *name;
-		char *cat;
+		const char *name;
+		const char *cat;
 		bool mandatory;
 		void *dest;
 	} css[] =
