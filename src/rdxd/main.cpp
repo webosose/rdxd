@@ -597,7 +597,7 @@ upload_overview()
 		LOG_RDXD_ERROR(MSGID_MK_TMP_FILE_ERR, 1,
 		                 PMLOGKS(PATH, dst_path),
 		                 "Failed to make starting overview into file %s", dst_path);
-		g_unlink(dst_path);
+		(void)g_unlink(dst_path);
 		g_free(dst_path);
 		return;
 	}
@@ -633,7 +633,7 @@ upload_overview()
 		g_error_free(error);
 	if (dst_path)
 	{
-		g_unlink(dst_path);
+		(void)g_unlink(dst_path);
 		g_free(dst_path);
 	}
 }
@@ -765,13 +765,13 @@ done:
 
 	if (tmpReportPath)
 	{
-		g_unlink(tmpReportPath);
+		(void)g_unlink(tmpReportPath);
 		g_free(tmpReportPath);
 	}
 
 	if (spec->reportSysInfoSnapshot)
 	{
-		g_unlink(spec->reportSysInfoSnapshot);
+		(void)g_unlink(spec->reportSysInfoSnapshot);
 		g_free(spec->reportSysInfoSnapshot);
 		spec->reportSysInfoSnapshot = NULL;
 	}
@@ -1182,9 +1182,9 @@ done:
 	}
 
 	if (newFilePath)
-		g_unlink(newFilePath);
+		(void)g_unlink(newFilePath);
 	if (tmpFilePath)
-		g_unlink(tmpFilePath);
+		(void)g_unlink(tmpFilePath);
 
 	g_free(originalFileName);
 	g_free(newFilePath);

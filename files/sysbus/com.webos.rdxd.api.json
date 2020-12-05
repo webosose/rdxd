@@ -1,5 +1,5 @@
 {
-  "system.debug": [
+  "diagnostics.reporting": [
     "com.webos.rdxd/getLogSettings",
     "com.webos.rdxd/makeLogReport",
     "com.webos.rdxd/makeReport",
