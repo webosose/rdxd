@@ -1,6 +1,6 @@
 {
     "exeName":"@WEBOS_INSTALL_SBINDIR@/rdxd",
-    "trustLevel" : ["oem"],
+    "trustLevel" : "oem",
     "allowedNames":["com.webos.rdxd"],
     "type":"regular",
     "permissions":[
